@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description"
+    content="UINO优锘科技是数字孪生可视化领域的专业厂商，采用自主技术对现实世界进行数字化建模，通过三维可视化进行展现，覆盖IT及IOT 全领域，为全行业客户提供智慧园区、IOC智能运营中心等覆盖多场景的数字孪生解决方案。">
+  <link rel="icon" href="https://cdn.uino.cn/art2-fn/thingjs/favicon_o.ico">
+  <script src="https://cdn.bootcdn.net/ajax/libs/mqtt/4.3.7/mqtt.js"></script>
+  <title>UINO</title>
+</head>
+
+<body>
+</body>
+
+  <script>
+    //连接到mqtt服务端
+    const client = mqtt.connect("ws://123.124.196.193:2103/mqtt", {
+      clientId: '11111',
+      clean: true,
+      connectTimeout: 4000,
+      username: 'user',
+      password: '123456',
+      reconnectPeriod: 1000,
+    });
+    window.client = client
+    // 当客户端无法连接或出现错误时触发回调
+    client.on('error', (err) => {
+      console.log('无法连接,出现错误', err);
+    });
+    client.on("connect", function() {
+      console.log("服务器连接成功");
+      client.subscribe("active", { qos: 1 }); //订阅主题为test的消息
+    });
+    client.on("message", function(top, message) {
+      console.log("当前topic：", top);
+      console.log("内容：", message.toString());
+    });
+    // 发送消息
+    client.publish('active', '2222', {
+        qos: 0, // 至少成功一次
+        retain: false, // 不保留
+      }, (err) => {
+        if (err) {
+          console.log('发送失败', err);
+        }
+      },
+    );
+  </script>
+
+</html>
