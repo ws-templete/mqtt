@@ -1,24 +1,26 @@
-const mqtt = require('mqtt')
-const m1 = require('./mock/1')
-const m2 = require('./mock/2')
-const m3 = require('./mock/3')
-const m4 = require('./mock/4')
+const mqtt = require("mqtt");
+const express = require("express");
+const client = mqtt.connect("mqtt://127.0.0.1:8012", {
+  username: "user",
+  password: "123456",
+});
+client.on("connect", function () {
+  console.log("服务器连接成功");
+  console.log(client.options.clientId);
+});
 
-const client = mqtt.connect('mqtt://127.0.0.1:8002', {
-  username: 'user',
-  password: '123456'
-})
-client.on('connect', function () {
-  console.log('服务器连接成功')
-  console.log(client.options.clientId)
-  test(client)
-})
-
-function test(client) {
-  setInterval(() => {
-    ;[...m1, ...m2, ...m3, ...m4].forEach((m) => {
-      client.publish('active', JSON.stringify(m), () => {})
-      // client.publish('active', JSON.stringify(m), () => {})
-    })
-  }, 1000)
-}
+// http 服务
+const app = express();
+app.use(express.json());
+app.use("/api/publish", (req, res) => {
+  console.log("http 收到数据:", req.body);
+  client.publish("active", JSON.stringify(req.body));
+  res.json({
+    code: 200,
+    message: "success",
+    data: null,
+  });
+});
+app.listen("8014", () => {
+  console.log("jd http listen on http://localhost:8014");
+});
