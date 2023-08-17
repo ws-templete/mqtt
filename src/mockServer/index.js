@@ -40,7 +40,7 @@ class MockServer {
           if (err) {
             console.error("Failed to publish message:", err);
           } else {
-            console.log("Message published successfully");
+            // console.log("Message published successfully", topic, payload);
           }
         }
       );
@@ -98,7 +98,7 @@ class MockServer {
 module.exports = (aedes) => {
   // 客户端连接
   aedes.on("clientReady", function (client) {
-    console.log("客户端连接了.......", client.id);
+    console.log("`````````");
     const mockServer = new MockServer(client);
     client.mockServer = mockServer;
     mockServer.start(client);
@@ -119,3 +119,7 @@ module.exports = (aedes) => {
     }
   });
 };
+
+process.on("uncaughtException", function (err) {
+  console.error("uncaughtException", err);
+});

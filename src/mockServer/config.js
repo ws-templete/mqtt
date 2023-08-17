@@ -28,7 +28,7 @@ const _config = {
       interval: 10000,
     },
     卸货指引: { prefix: "xh", length: 6, step: 1, start: 100000 },
-    上架: { prefix: "sj", length: 6, step: 1, start: 100000 },
+    上架指引: { prefix: "sj", length: 6, step: 1, start: 100000 },
     下架: { prefix: "xj", length: 6, step: 1, start: 100000 },
     出库: { prefix: "ck", length: 6, step: 1, start: 100000 },
   },

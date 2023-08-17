@@ -11,8 +11,10 @@
   "dependencies": {
     "aedes": "^0.49.0",
     "aedes-server-factory": "^0.2.1",
+    "dayjs": "^1.11.9",
     "express": "^4.18.2",
     "fs-extra": "^11.1.1",
+    "log4js": "^6.9.1",
     "lowdb": "^1.0.0",
     "mockjs": "^1.1.0",
     "mqtt": "^4.3.7"
