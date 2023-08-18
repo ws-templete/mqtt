@@ -7,9 +7,9 @@ class MockServer {
   constructor(client) {
     this.ctx = this.createCtx(client);
 
-    const tasks = fs.readdirSync(__dirname + "/tasks");
-    this.tasks = tasks.map((task) => {
-      const T = require("./tasks/" + task); // ({ client, config, helper, db });
+    const plugins = fs.readdirSync(__dirname + "/plugins");
+    this.plugins = plugins.map((task) => {
+      const T = require("./plugins/" + task); // ({ client, config, helper, db });
       return new T();
     });
   }
@@ -22,6 +22,7 @@ class MockServer {
     };
     ctx.helper = this._bindCtxHelper(helper, ctx); // 扩展辅助函数, 每个 ctx 都有自己的 helper 实例  
     ctx.publish = this._wrapClientPublish(client); // 扩展 publish 方法
+
     return ctx;
   }
 
@@ -68,7 +69,7 @@ class MockServer {
    * 启动时
    */
   start() {
-    this.tasks.forEach((t) => {
+    this.plugins.forEach((t) => {
       t.onStart?.call(t, this.ctx);
     });
   }
@@ -77,7 +78,7 @@ class MockServer {
    * 收到消息时
    */
   message(topic, payload, packet) {
-    this.tasks.forEach((t) => {
+    this.plugins.forEach((t) => {
       try {
         t.onMessage?.call(t, this.ctx, {
           topic,
@@ -87,13 +88,14 @@ class MockServer {
         console.error(e);
       }
     });
+    console.log('this.ctx', this.ctx)
   }
 
   /**
    * 停止时
    */
   stop() {
-    this.tasks.forEach((t) => {
+    this.plugins.forEach((t) => {
       t.onStop?.call(t, this.ctx);
     });
   }

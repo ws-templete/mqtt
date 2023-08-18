@@ -11,20 +11,8 @@ client.on("connect", function () {
   console.log("服务器连接成功");
   console.log(client.options.clientId);
   client.subscribe("active", { qos: 1 });
-  client.subscribe("state", { qos: 1 });
 
   initMock(client);
-});
-
-client.on("message", function (top, message) {
-  // console.log("当前topic：", top);
-  // console.log("内容：", message.toString());
-
-  // db.set("active", JSON.parse(message.toString()));
-  // const msg = JSON.parse(message.toString());
-  // if (top === "state" && msg.type === "objectState") {
-  //   db.ledgerList.set("data", msg.data).write();
-  // }
 });
 
 // http 服务

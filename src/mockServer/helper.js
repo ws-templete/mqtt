@@ -5,9 +5,14 @@ module.exports = {
    * @returns
    */
   getId(name) {
-    const { prefix, length, step, start } = this.config.numberRules[name];
+    const rules = this.config.numberRules?.[name];
+    if (!rules) {
+      console.error(`编号规则不存在：${name}`);
+      return;
+    }
+    const { prefix, length, step, start } = rules;
     const key = prefix + `${start}`.padStart(length, "0");
-    this.config.numberRules[name].start += step;
+    rules.start += step;
     console.log("编号：", key, name);
     return key;
   },

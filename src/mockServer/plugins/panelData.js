@@ -154,7 +154,7 @@ class DataPanel {
         ],
       };
 
-      console.log("发布数据看板", postData);
+      // console.log("发布数据看板", postData);
       ctx.publish("active", postData);
     }, 3000);
   }
