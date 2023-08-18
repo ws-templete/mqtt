@@ -16,7 +16,7 @@ class ArrivalTask {
         return;
       }
       const data = mockjs.mock({
-        "data|1-2": [
+        "data|4": [
           {
             商品编号: () => ctx.helper.getId("goodsNo"),
             商品类型: "空调",
@@ -33,9 +33,12 @@ class ArrivalTask {
       });
 
       this.num += data.data.length;
-      ctx.data.addArrivalList(...data.data);
+      // 添加到数据库
+      data.data.forEach((item) => {
+        ctx.data.addArrivalList(item);
+      });
 
-      console.log("推送数据 到货计划");
+      console.log("推送数据 到货计划", data.data.length);
       ctx.publish(
         "active",
         JSON.stringify({
