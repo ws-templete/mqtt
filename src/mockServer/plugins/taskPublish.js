@@ -49,14 +49,15 @@ class TaskPublish {
       // 查询可上架货物的 ID, 暂时代替卡板号
       const goods = ctx.data.objectMap?.goodsData?.filter?.((g) => {
         console.log("goods.progressDetail", g.progressDetail);
-        return g.progressDetail === "卸货指引完成";
+        const res = g.progressDetail === "卸货指引完成" && !g._doing;
+        return res;
       });
       const shelfSpaces = ctx.data.objectMap?.HJ_01_01_Data.map(
         (s) => s.children
       )
         .flat()
         .filter?.((s) => {
-          return s.state === "可用";
+          return s.state === "可用" && !s._doing;
         })
         .slice(0, goods?.length);
       if (!shelfSpaces?.length) {
@@ -68,6 +69,8 @@ class TaskPublish {
       taskdail = goods
         .map((g, i) => {
           const storageLocationNo = shelfSpaces[i]?.ID;
+          g._doing = true;
+          shelfSpaces[i]._doing = true;
           return {
             cardBoardNo: g.ID, // 卡板号, 暂时用货物 ID
             storageLocationNo, // 储位号, 即货位
