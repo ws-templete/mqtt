@@ -3,7 +3,6 @@ const fs = require("fs-extra");
 const helper = require("./helper");
 const config = require("./config");
 const data = require("./data");
-
 class MockServer {
   constructor(client) {
     this.ctx = this.createCtx(client);
@@ -21,7 +20,7 @@ class MockServer {
       config: config.clone(), // 每个客户端的配置
       data: data.clone(), // 每个客户端的运行时数据
     };
-    ctx.helper = this._bindCtxHelper(helper, ctx); // 扩展辅助函数
+    ctx.helper = this._bindCtxHelper(helper, ctx); // 扩展辅助函数, 每个 ctx 都有自己的 helper 实例  
     ctx.publish = this._wrapClientPublish(client); // 扩展 publish 方法
     return ctx;
   }
@@ -47,23 +46,28 @@ class MockServer {
     };
   }
 
+  /**
+   * helper 独立, 不共享, 因为 ctx 是每个客户端独立的
+   * @param {Object} helper 方法
+   * @param {Object} ctx 上下文
+   * @returns 新的 helper
+   */
   _bindCtxHelper(helper, ctx) {
+
+    const _helper = {}
     // console.log("bind helper", helper, ctx);
     Object.entries(helper).forEach(([fnName, fn]) => {
       if (typeof fn === "function") {
-        console.log("bind helper function", fnName);
-        helper[fnName] = fn.bind(ctx);
+        _helper[fnName] = fn.bind(ctx);
       }
     });
-    return helper;
+    return _helper;
   }
 
   /**
    * 启动时
    */
   start() {
-    console.log("mock server start");
-
     this.tasks.forEach((t) => {
       t.onStart?.call(t, this.ctx);
     });
@@ -98,7 +102,6 @@ class MockServer {
 module.exports = (aedes) => {
   // 客户端连接
   aedes.on("clientReady", function (client) {
-    console.log("`````````");
     const mockServer = new MockServer(client);
     client.mockServer = mockServer;
     mockServer.start(client);
