@@ -14,6 +14,7 @@ module.exports = {
       merge_logs: true,
       error_file: "./logs/pm2-error.log",
       // raw_logs: true,
+      node_args: ["--inspect=8090"], 
     },
   ],
 };
