@@ -142,7 +142,7 @@ class TaskPublish {
             商品编号: () => ctx.helper.getId("goodsNo"),
             商品类型: "空调",
             商品名称: "1.25P空调",
-            商品数量: 1,
+            商品数量: 5,
             生产厂家: "格力",
             生产日期: 44927,
             合格率: 96,
@@ -170,10 +170,10 @@ class TaskPublish {
 
       this.arrivalNum += data.data.length;
 
-      if (this.arrivalNum >= 5 && this.timer) {
-        clearInterval(this.timer);
-        this.timer = null;
-      }
+      // if (this.arrivalNum >= 5 && this.timer) {
+      //   clearInterval(this.timer);
+      //   this.timer = null;
+      // }
     };
 
     publish();
