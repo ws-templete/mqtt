@@ -5,7 +5,7 @@ module.exports = {
    * @returns
    */
   getId(name) {
-    const rules = this.config.numberRules?.[name];
+    const rules = this.config.rules?.[name];
     if (!rules) {
       console.error(`编号规则不存在：${name}`);
       return;
@@ -15,5 +15,19 @@ module.exports = {
     rules.start += step;
     console.log("编号：", key, name);
     return key;
+  },
+  // 获取当前时间, 格式为 yyyy-M-d HH:mm:ss
+  getNowTime() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+    const pad0 = (num) => num.toString().padStart(2, "0");
+    return `${year}-${month}-${day} ${pad0(hour)}:${pad0(minute)}:${pad0(
+      second
+    )}`;
   },
 };
