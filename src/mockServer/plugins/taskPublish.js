@@ -12,26 +12,27 @@ class TaskPublish {
     this._startPublishArrivalTask(ctx); // 推送到货计划
     this._startPublishUnloadTask(ctx); // 推送卸货任务
     this._startPublishOnTask(ctx); // 推送上架任务
-    this._startPublishOffTask(ctx); // 推送下架任务
-    // this._startPublishOutTask(ctx); // 推送出库任务
   }
 
   onMessage(ctx, { topic, payload }) {
-    if (topic !== "state") {
-      return;
-    }
-
-    if (payload.type !== "taskProgressDone") {
+    if (topic !== "state" || payload.type !== "taskProgressChanged") {
       return;
     }
 
     // 任务完成后, 触发下一个流程
-    // console.log("内容：", payload);
+    // console.log("收到任务进度变化：", payload);
 
     const { tasktype, taskID, progress } = payload.data;
 
     // 任务完成后, 将涉及到的设备的置空
     if (progress?.done) {
+      // 启动下架推送任务
+      if (tasktype === "上架指引" && !this._initOffTask) {
+        this._startPublishOffTask(ctx); // 推送下架任务
+        this._startPublishOutTask(ctx); // 推送出库任务
+        this._initOffTask = true;
+      }
+
       Object.entries(this.objectTaskMap).forEach(([key, value]) => {
         // 更新任务单完成时间
         payload.data.finishTime = ctx.helper.getNowTime();
@@ -54,7 +55,7 @@ class TaskPublish {
         商品编号: ctx.helper.getId("goodsNo"),
         商品类型: "空调",
         商品名称: "1.25P空调",
-        商品数量: 1,
+        商品数量: 5,
         生产厂家: "格力",
         生产日期: 44927,
         合格率: 96,
@@ -82,7 +83,7 @@ class TaskPublish {
 
     publish();
     const timer = setInterval(publish, 10000);
-    this.timers.push(timer)
+    this.timers.push(timer);
   }
 
   /**
@@ -100,7 +101,7 @@ class TaskPublish {
       const platform = ctx.data.objectMap.$platforms?.find?.((t) => {
         return t.state === 0 && !this.objectTaskMap[t.name];
       });
-      
+
       if (!truck?.name || !platform?.name) {
         console.log(
           `发布卸货指引失败，车辆或月台不可用`,
@@ -221,12 +222,12 @@ class TaskPublish {
           sourceSpace,
           goods,
           this.objectTaskMap,
-          ctx.data.objectMap,
+          ctx.data.objectMap
         );
         return;
       }
 
-      console.log(`下架了`, )
+      console.log(`下架了`);
       this._publishTask(
         {
           sourceStorageLocation: sourceSpace.name, // 起始储位
@@ -251,82 +252,32 @@ class TaskPublish {
   _startPublishOutTask(ctx) {
     const taskType = "出库指引";
     const publish = async () => {
-      // 查找零拣区有货物的货位
-      const space = ctx.data.objectMap.$pickingSpaces?.find?.((t) => {
-        return t.state === 1 && !this.objectTaskMap[t.name];
-      });
-
+      // 查找下架完成的货物
       const goods = ctx.data.objectMap.$goods?.find?.((t) => {
-        return space?.goodsName === t.name;
-      });
-
-      // const agvCars = ctx.data.objectMap.$agvCars?.filter?.((t) => {
-      //   return (
-      //     t.state === 0 &&
-      //     !this.objectTaskMap[t.name] &&
-      //     ctx.data.objectRelationShip?.[t.ID]?.startsWith("QY_01_04")
-      //   );
-      // });
-      // const agvCar = this.randomPickOne(agvCars);
-
-      // 查找零拣区区域内的工具
-      const worker = ctx.data.objectMap.$workers?.find?.((t) => {
         return (
-          t.state === 0 &&
-          // !this.objectTaskMap[t.name] && // 所有的锁都有问题, 流程太长时, 会导致锁必须等结束才能释放
-          ctx.data.objectRelationShip?.[t.ID]?.startsWith("QY_02_04") // 先写死
+          t.progressDetail === "下架指引完成" && !this.objectTaskMap[t.name]
         );
       });
 
-      // 发货道口, 这儿要根据订单地址来, 先随机
-      const outboundTunnel = this.randomPickOne(
-        ctx.data.objectMap.$unloadStorageArea
-      );
-
       if (
-        !space?.name ||
-        !worker?.name ||
-        !outboundTunnel?.name
+        !goods?.name
         // !agvCar?.name
       ) {
         console.log(
           `发布出库指引失败`,
-          space,
-          // agvCar,
-          worker,
-          outboundTunnel,
+          goods,
           this.objectTaskMap,
           ctx.data.objectMap
         );
         return;
       }
 
-      // 增加库存流水
-      ctx.data.addRecord("storeflowList", {
-        goodsNo: goods.goodsNo,
-        goodsName: goods.name,
-        storageId: space.ID,
-        storageName: space.name,
-        storageType: space.bType,
-        type: "出库",
-        goodsNum: 1,
-        createTime: ctx.helper.getNowTime(),
-        creator: "张磊",
-      });
-
       this._publishTask(
         {
-          sku: "SKU123456", //商品sku
-          quantity: 6, //数量
-          outboundComponent: "component1", //出库组件
-          outboundLocation: space.name, //出库储位
-          outboundTunnel: outboundTunnel.name, //出库道口, 根据订单地址来, 先随机
-          toolname: [worker.name], // 工具
+          goodsNo: goods.name, //商品名称
+          goodsNum: 1, //商品数量
           $relativeObjects: {
-            $pickingSpaces: [space.name],
-            $workers: [worker.name],
-            // $agvCars: [agvCar.name],
-            $unloadStorageArea: [outboundTunnel.name],
+            $goods: [goods.name],
           },
           $relativeData: {
             goods,

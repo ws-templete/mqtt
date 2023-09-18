@@ -39,14 +39,14 @@ const _config = {
       length: 6,
       step: 1,
       start: 100000,
-      interval: 10000,
+      interval: 3000,
     },
     下架指引: {
       prefix: "xj",
       length: 6,
       step: 1,
       start: 100000,
-      interval: 10000,
+      interval: 5000,
     },
     出库指引: {
       prefix: "ck",
