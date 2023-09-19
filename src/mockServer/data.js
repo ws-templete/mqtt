@@ -5,8 +5,9 @@ const taskDataKeyMap = {
   到货计划: "arrivalList",
   卸货指引: "unloadList",
   上架指引: "onList",
+  组板指引: "unitList",
   下架指引: "offList",
-  出库指引: "outList",
+  // 出库指引: "outList",
 };
 
 const actions = {
@@ -86,6 +87,7 @@ const objectKeyMap = {
   tcw_01_01_Data: "$truckParkSpaces", // 货车停车位
   tcw_01_02_Data: "$platforms", // 卸货月台
   agv_01_01_Data: "$agvCars", // 叉车
+  goodsstowData: "$cardBoards", // 码盘
   unloadStorageAreaData: "$unloadStorageArea", // 卸货暂存区
   workerData: "$workers", // 工人
   HJ_01_01_Data: "$shelfs", // 货架
@@ -99,7 +101,8 @@ module.exports = {
       unloadList: [], // 卸货任务列表
       onList: [], // 上架任务列表
       offList: [], // 下架任务列表
-      outList: [], // 出库任务列表
+      // outList: [], // 出库任务列表
+      unitList: [], // 组板任务列表",
 
       storeflowList: [], // 库存流水列表
       objectMap: {

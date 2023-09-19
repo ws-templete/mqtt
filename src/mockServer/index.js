@@ -12,6 +12,10 @@ class MockServer {
       const T = require("./plugins/" + task); // ({ client, config, helper, db });
       return new T();
     });
+
+    this.plugins.forEach((t) => {
+      t.onCreated?.call(t, this.ctx);
+    });
   }
 
   createCtx(client) {
@@ -20,7 +24,7 @@ class MockServer {
       config: config.clone(), // 每个客户端的配置
       data: data.clone(), // 每个客户端的运行时数据
     };
-    ctx.helper = this._bindCtxHelper(helper, ctx); // 扩展辅助函数, 每个 ctx 都有自己的 helper 实例  
+    ctx.helper = this._bindCtxHelper(helper, ctx); // 扩展辅助函数, 每个 ctx 都有自己的 helper 实例
     ctx.publish = this._wrapClientPublish(client); // 扩展 publish 方法
 
     return ctx;
@@ -54,8 +58,7 @@ class MockServer {
    * @returns 新的 helper
    */
   _bindCtxHelper(helper, ctx) {
-
-    const _helper = {}
+    const _helper = {};
     // console.log("bind helper", helper, ctx);
     Object.entries(helper).forEach(([fnName, fn]) => {
       if (typeof fn === "function") {
@@ -88,7 +91,7 @@ class MockServer {
         console.error(e);
       }
     });
-    console.log('this.ctx', this.ctx)
+    console.log("this.ctx", this.ctx);
   }
 
   /**
@@ -104,6 +107,9 @@ class MockServer {
 module.exports = (aedes) => {
   // 客户端连接
   aedes.on("clientReady", function (client) {
+    const url = client.req?.url;
+    console.log('url', url)
+    if (!url.includes("?mode=1")) return; // 只要仿真模式下才推送数据
     const mockServer = new MockServer(client);
     client.mockServer = mockServer;
     mockServer.start(client);

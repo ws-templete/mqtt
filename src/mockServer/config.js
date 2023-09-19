@@ -1,6 +1,12 @@
 const _config = {
   // 编号规则
   rules: {
+    bagNo: {
+      prefix: "BAG",
+      length: 7,
+      step: 1,
+      start: 10000,
+    },
     goodsNo: {
       prefix: "SP",
       length: 7,
@@ -13,43 +19,50 @@ const _config = {
       step: 1,
       start: 90909,
     },
-    到货计划: {
-      prefix: "dhjh",
+    入库单: {
+      prefix: "RK",
       length: 6,
       step: 1,
       start: 100000,
-      interval: 5000,
+      interval: 10000,
     },
     入园: {
-      prefix: "ry",
+      prefix: "RY",
       length: 6,
       step: 1,
       start: 100000,
       interval: 10000,
     },
     卸货指引: {
-      prefix: "xh",
+      prefix: "XH",
       length: 6,
       step: 1,
       start: 100000,
       interval: 10000,
     },
+    组板指引: {
+      prefix: "ZB",
+      length: 6,
+      step: 1,
+      start: 100000,
+      interval: 5000,
+    },
     上架指引: {
-      prefix: "sj",
+      prefix: "SJ",
       length: 6,
       step: 1,
       start: 100000,
       interval: 3000,
     },
     下架指引: {
-      prefix: "xj",
+      prefix: "XJ",
       length: 6,
       step: 1,
       start: 100000,
       interval: 5000,
     },
     出库指引: {
-      prefix: "ck",
+      prefix: "CK",
       length: 6,
       step: 1,
       start: 10000,
