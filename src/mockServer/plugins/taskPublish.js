@@ -133,7 +133,7 @@ class TaskPublish {
         return t.state === 0 && !this.objectTaskMap[t.name];
       });
 
-      if (!truck?.name || !platform?.name) {
+      if (!truck?.name || !platform?.name || !truck.carNo) {
         console.log(
           `发布卸货指引失败，车辆或月台不可用`,
           truck,
@@ -203,15 +203,19 @@ class TaskPublish {
 
       arrivalItem.$isUnload = true; // 表示该卸货单已经推送过
 
-      goods.forEach(async (g) => {
+      goods.forEach(async (g, i) => {
         let cardBoard, bagBoardNo;
         await new Promise((resolve) => {
-          const timer = setInterval(() => {
+          let timer = setInterval(() => {
             cardBoard = ctx.data.objectMap.$cardBoards?.find?.((t) => {
               return t.state === 0 && !this.objectTaskMap[t.name];
             });
             bagBoardNo = g.bagNo;
-            if (!cardBoard?.name) {
+            if (
+              !cardBoard?.name ||
+              !g.bagNo ||
+              g.progressDetail !== "卸货指引完成"
+            ) {
               console.log(
                 `发布组板指引失败`,
                 bagBoardNo,
@@ -222,8 +226,9 @@ class TaskPublish {
               return;
             }
             clearInterval(timer);
+            timer = null;
             resolve(1);
-          }, 3000);
+          }, 2000 * i);
           this.timers.push(timer);
         });
 
@@ -234,6 +239,7 @@ class TaskPublish {
             weight: 1, //权值，暂时用不到
             $relativeObjects: {
               $cardBoardsNo: [cardBoard.name],
+              $goods: [g.name],
             },
             $relativeData: {
               goods: g,
@@ -266,9 +272,9 @@ class TaskPublish {
       const spaces = ctx.data.objectMap.$shelfSpaces?.filter?.((t) => {
         return t.state === 0 && !this.objectTaskMap[t.name];
       });
-      const space = this.randomPickOne(spaces)
+      const space = this.randomPickOne(spaces);
 
-      if (!bag?.name || !space?.name) {
+      if (!bag?.name || !space?.name || !bag.bagNo) {
         console.log(
           `发布上架指引失败，包裹或货位`,
           bag,

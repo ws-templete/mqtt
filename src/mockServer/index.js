@@ -109,7 +109,7 @@ module.exports = (aedes) => {
   aedes.on("clientReady", function (client) {
     const url = client.req?.url;
     console.log('url', url)
-    if (!url.includes("?mode=1")) return; // 只要仿真模式下才推送数据
+    if (!url?.includes("?mode=1")) return; // 只要仿真模式下才推送数据
     const mockServer = new MockServer(client);
     client.mockServer = mockServer;
     mockServer.start(client);

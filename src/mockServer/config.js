@@ -24,7 +24,7 @@ const _config = {
       length: 6,
       step: 1,
       start: 100000,
-      interval: 10000,
+      interval: 20000,
     },
     入园: {
       prefix: "RY",
@@ -38,7 +38,7 @@ const _config = {
       length: 6,
       step: 1,
       start: 100000,
-      interval: 10000,
+      interval: 5000,
     },
     组板指引: {
       prefix: "ZB",
@@ -52,7 +52,7 @@ const _config = {
       length: 6,
       step: 1,
       start: 100000,
-      interval: 3000,
+      interval: 5000,
     },
     下架指引: {
       prefix: "XJ",

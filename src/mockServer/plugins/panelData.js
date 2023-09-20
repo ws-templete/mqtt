@@ -82,13 +82,13 @@ class DataPanel {
               return {
                 卸货单号: t.taskID,
                 卸货单状态: t.progress?.done ? "已完成" : "进行中",
-                包裹数量: t.taskdail.$relativeData.arrivalTask.taskdail.length,
+                包裹数量: t.taskdail.$relativeData?.arrivalTask?.taskdail?.length,
                 实际卸货数量: t.progress?.index || 0,
                 创建时间: t.createTime,
                 完成时间: t.finishTime,
                 操作人员: "张磊",
                 月台: t.taskdail.platformname,
-                车牌号: t.taskdail.$relativeData.arrivalTask.carNO,
+                车牌号: t.taskdail.$relativeData.arrivalTask?.carNO,
                 操作: ["查看"],
               };
             }),
