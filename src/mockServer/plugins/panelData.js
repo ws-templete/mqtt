@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 /**
  * 推送数据看板
  */
@@ -18,11 +19,7 @@ class DataPanel {
             list: [],
           },
           {
-            title: "卸货引导",
-            list: [],
-          },
-          {
-            title: "商品验货",
+            title: "卸货指引",
             list: [],
           },
           {
@@ -41,17 +38,13 @@ class DataPanel {
             title: "商品下架",
             list: [],
           },
-          {
-            title: "打包分流",
-            list: [],
-          },
-          {
-            title: "装车发货",
-            list: [],
-          },
         ],
       })
     );
+  }
+
+  formatTime(time) {
+    return dayjs(time).format("HH:mm:ss");
   }
 
   onStart(ctx) {
@@ -82,10 +75,11 @@ class DataPanel {
               return {
                 卸货单号: t.taskID,
                 卸货单状态: t.progress?.done ? "已完成" : "进行中",
-                包裹数量: t.taskdail.$relativeData?.arrivalTask?.taskdail?.length,
+                包裹数量:
+                  t.taskdail.$relativeData?.arrivalTask?.taskdail?.length,
                 实际卸货数量: t.progress?.index || 0,
-                创建时间: t.createTime,
-                完成时间: t.finishTime,
+                创建时间: this.formatTime(t.createTime),
+                完成时间: this.formatTime(t.finishTime),
                 操作人员: "张磊",
                 月台: t.taskdail.platformname,
                 车牌号: t.taskdail.$relativeData.arrivalTask?.carNO,
@@ -104,12 +98,12 @@ class DataPanel {
                 计划上架数量: 1, // t.progress?.total,
                 实际上架数量: t.progress?.index || 0,
                 操作人员: "张磊",
-                创建时间: t.createTime,
-                完成时间: t.finishTime,
+                创建时间: this.formatTime(t.createTime),
+                完成时间: this.formatTime(t.finishTime),
                 码盘ID: t.taskdail.storageLocationNo,
                 操作: ["查看"],
               };
-            })
+            }),
           },
           {
             title: "上架流程",
@@ -122,8 +116,8 @@ class DataPanel {
                 计划上架数量: 1, // t.progress?.total,
                 实际上架数量: t.progress?.index || 0,
                 操作人员: "张磊",
-                创建时间: t.createTime,
-                完成时间: t.finishTime,
+                创建时间: this.formatTime(t.createTime),
+                完成时间: this.formatTime(t.finishTime),
                 上架储区: t.taskdail.storageLocationNo,
                 操作: ["查看"],
               };
@@ -140,7 +134,7 @@ class DataPanel {
                 储区类型: g.storageType,
                 库存操作类型: g.type,
                 商品数量: g.goodsNum,
-                操作时间: g.createTime,
+                操作时间: this.formatTime(g.createTime),
                 操作人员: g.creator,
               };
             }),
@@ -157,8 +151,8 @@ class DataPanel {
                 供应商名称: t.taskdail.$relativeData.manufacturer,
                 商品数量: t.progress?.total || 1,
                 实际下架数量: t.progress?.index || 0,
-                创建时间: t.createTime,
-                完成时间: t.finishTime,
+                创建时间: this.formatTime(t.createTime),
+                完成时间: this.formatTime(t.finishTime),
                 操作人员: "张磊",
                 操作: ["查看"],
               };
