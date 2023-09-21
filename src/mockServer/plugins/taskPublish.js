@@ -211,11 +211,7 @@ class TaskPublish {
               return t.state === 0 && !this.objectTaskMap[t.name];
             });
             bagBoardNo = g.bagNo;
-            if (
-              !cardBoard?.name ||
-              !g.bagNo ||
-              g.progressDetail !== "卸货指引完成"
-            ) {
+            if (!cardBoard?.name || !g.bagNo) {
               console.log(
                 `发布组板指引失败`,
                 bagBoardNo,
@@ -344,6 +340,20 @@ class TaskPublish {
         );
         return;
       }
+
+      
+      // 增加库存流水
+      ctx.data.addRecord("storeflowList", {
+        goodsNo: goods.goodsNo,
+        goodsName: goods.name,
+        storageId: sourceSpace.ID,
+        storageName: sourceSpace.name,
+        storageType: sourceSpace.bType,
+        type: "出库",
+        goodsNum: 1,
+        createTime: ctx.helper.getNowTime(),
+        creator: "张磊",
+      });
 
       console.log(`下架了`);
       this._publishTask(

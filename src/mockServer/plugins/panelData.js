@@ -94,10 +94,6 @@ class DataPanel {
             }),
           },
           {
-            title: "商品验货",
-            list: [],
-          },
-          {
             title: "组板流程",
             list: reverse(ctx.data.unitList).map((t) => {
               return {
@@ -150,7 +146,7 @@ class DataPanel {
             }),
           },
           {
-            title: "商品下架",
+            title: "下架指引",
             list: reverse(ctx.data.offList).map((t) => {
               return {
                 下架单号: t.taskID,
@@ -167,14 +163,6 @@ class DataPanel {
                 操作: ["查看"],
               };
             }),
-          },
-          {
-            title: "打包分流",
-            list: [],
-          },
-          {
-            title: "装车发货",
-            list: [],
           },
         ],
       };
