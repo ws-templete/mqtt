@@ -66,6 +66,7 @@ class DataPanel {
                 车牌号: t.carNO,
                 包裹数量: t.GOODSDTO.length,
                 当前状态: "到达",
+                id: t._id,
               };
             }),
           },
@@ -84,6 +85,7 @@ class DataPanel {
                 月台: t.taskdail.platformname,
                 车牌号: t.taskdail.$relativeData.arrivalTask?.carNO,
                 操作: ["查看"],
+                id: t._id,
               };
             }),
           },
@@ -102,6 +104,7 @@ class DataPanel {
                 完成时间: this.formatTime(t.finishTime),
                 码盘ID: t.taskdail.storageLocationNo,
                 操作: ["查看"],
+                id: t._id,
               };
             }),
           },
@@ -120,22 +123,24 @@ class DataPanel {
                 完成时间: this.formatTime(t.finishTime),
                 上架储区: t.taskdail.storageLocationNo,
                 操作: ["查看"],
+                id: t._id,
               };
             }),
           },
           {
             title: "库存流水",
-            list: reverse(ctx.data.storeflowList).map((g) => {
+            list: reverse(ctx.data.storeflowList).map((t) => {
               return {
-                商品编码: g.goodsNo,
-                商品名称: g.goodsName,
-                储区编码: g.storageId,
-                储区名称: g.storageName,
-                储区类型: g.storageType,
-                库存操作类型: g.type,
-                商品数量: g.goodsNum,
-                操作时间: this.formatTime(g.createTime),
-                操作人员: g.creator,
+                商品编码: t.goodsNo,
+                商品名称: t.goodsName,
+                储区编码: t.storageId,
+                储区名称: t.storageName,
+                储区类型: t.storageType,
+                库存操作类型: t.type,
+                商品数量: t.goodsNum,
+                操作时间: this.formatTime(t.createTime),
+                操作人员: t.creator,
+                id: t._id,
               };
             }),
           },
@@ -155,6 +160,7 @@ class DataPanel {
                 完成时间: this.formatTime(t.finishTime),
                 操作人员: "张磊",
                 操作: ["查看"],
+                id: t._id,
               };
             }),
           },

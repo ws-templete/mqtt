@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid');
+
 /**
  * Database storage
  */
@@ -15,12 +17,15 @@ const actions = {
     this.arrivalList = value;
   },
   addArrivalList(value) {
+    value._id = uuidv4()
     this.arrivalList.push(value);
   },
   addTaskList(value) {
+    value._id = uuidv4()
     this.taskList.push(value);
   },
   addRecord(key, value) {
+    value._id = uuidv4()
     this[key].push(value);
   },
   // 更新任务, 没有则创建
@@ -34,6 +39,7 @@ const actions = {
     const index = this[key].findIndex((item) => item.taskID === value.taskID);
     if (index === -1) {
       console.warn("没有找到要更新的任务, 将会新增", value.taskID);
+      value._id = uuidv4()
       this[key].push(value);
       return;
     }
