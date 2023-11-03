@@ -22,10 +22,10 @@ class DataPanel {
             title: "卸货指引",
             list: [],
           },
-          {
-            title: "组板流程",
-            list: [],
-          },
+          // {
+          //   title: "组板流程",
+          //   list: [],
+          // },
           {
             title: "上架流程",
             list: [],
@@ -77,51 +77,51 @@ class DataPanel {
                 卸货单号: t.taskID,
                 卸货单状态: t.progress?.done ? "已完成" : "进行中",
                 包裹数量:
-                  t.taskdail.$relativeData?.arrivalTask?.taskdail?.length,
+                  t.taskdetail.$relativeData?.arrivalTask?.taskdetail?.length,
                 实际卸货数量: t.progress?.index || 0,
                 创建时间: this.formatTime(t.createTime),
                 完成时间: this.formatTime(t.finishTime),
                 操作人员: "张磊",
-                月台: t.taskdail.platformname,
-                车牌号: t.taskdail.$relativeData.arrivalTask?.carNO,
+                月台: t.taskdetail.platformname,
+                车牌号: t.taskdetail.$relativeData.arrivalTask?.carNO,
                 操作: ["查看"],
                 id: t._id,
               };
             }),
           },
-          {
-            title: "组板流程",
-            list: reverse(ctx.data.unitList).map((t) => {
-              return {
-                任务单号: t.taskID,
-                任务状态: t.progress?.done ? "已完成" : "进行中",
-                商品编码: t.taskdail.$relativeData.goods?.name,
-                商品名称: t.taskdail.$relativeData.goods?.goodsNo,
-                计划上架数量: 1, // t.progress?.total,
-                实际上架数量: t.progress?.index || 0,
-                操作人员: "张磊",
-                创建时间: this.formatTime(t.createTime),
-                完成时间: this.formatTime(t.finishTime),
-                码盘ID: t.taskdail.storageLocationNo,
-                操作: ["查看"],
-                id: t._id,
-              };
-            }),
-          },
+          // {
+          //   title: "组板流程",
+          //   list: reverse(ctx.data.unitList).map((t) => {
+          //     return {
+          //       任务单号: t.taskID,
+          //       任务状态: t.progress?.done ? "已完成" : "进行中",
+          //       商品编码: t.taskdetail.$relativeData.goods?.name,
+          //       商品名称: t.taskdetail.$relativeData.goods?.goodsNo,
+          //       计划上架数量: 1, // t.progress?.total,
+          //       实际上架数量: t.progress?.index || 0,
+          //       操作人员: "张磊",
+          //       创建时间: this.formatTime(t.createTime),
+          //       完成时间: this.formatTime(t.finishTime),
+          //       码盘ID: t.taskdetail.storageLocationNo,
+          //       操作: ["查看"],
+          //       id: t._id,
+          //     };
+          //   }),
+          // },
           {
             title: "上架流程",
             list: reverse(ctx.data.onList).map((t) => {
               return {
                 任务单号: t.taskID,
                 任务状态: t.progress?.done ? "已完成" : "进行中",
-                商品编码: t.taskdail.$relativeData.goods?.name,
-                商品名称: t.taskdail.$relativeData.goods?.goodsNo,
+                商品编码: t.taskdetail.$relativeData.goods?.name,
+                商品名称: t.taskdetail.$relativeData.goods?.goodsNo,
                 计划上架数量: 1, // t.progress?.total,
                 实际上架数量: t.progress?.index || 0,
                 操作人员: "张磊",
                 创建时间: this.formatTime(t.createTime),
                 完成时间: this.formatTime(t.finishTime),
-                上架储区: t.taskdail.storageLocationNo,
+                上架储区: t.taskdetail.storageLocationNo,
                 操作: ["查看"],
                 id: t._id,
               };
@@ -150,10 +150,10 @@ class DataPanel {
               return {
                 下架单号: t.taskID,
                 下架单状态: t.progress?.done ? "已完成" : "进行中",
-                商品编码: t.taskdail.$relativeData.goods?.name,
-                商品名称: t.taskdail.$relativeData.goods?.goodsNo,
-                供应商编码: t.taskdail.$relativeData.manufacturerCode,
-                供应商名称: t.taskdail.$relativeData.manufacturer,
+                商品编码: t.taskdetail.$relativeData.goods?.name,
+                商品名称: t.taskdetail.$relativeData.goods?.goodsNo,
+                供应商编码: t.taskdetail.$relativeData.manufacturerCode,
+                供应商名称: t.taskdetail.$relativeData.manufacturer,
                 商品数量: t.progress?.total || 1,
                 实际下架数量: t.progress?.index || 0,
                 创建时间: this.formatTime(t.createTime),

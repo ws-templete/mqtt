@@ -12,7 +12,7 @@ class TaskPublish {
   onStart(ctx) {
     this._startPublishArrivalTask(ctx); // 推送到货计划
     this._startPublishUnloadTask(ctx); // 推送卸货任务
-    this._startPublishUnitTask(ctx); // 推送组板任务
+    // this._startPublishUnitTask(ctx); // 推送组板任务
     this._startPublishOnTask(ctx); // 推送上架任务
   }
 
@@ -94,7 +94,7 @@ class TaskPublish {
       });
       // 转成统一的格式
       data.taskID = data.RKNO;
-      data.taskdail = data.GOODSDTO;
+      data.taskdetail = data.GOODSDTO;
 
       // 添加到数据库
       ctx.data.addArrivalList(data);
@@ -111,7 +111,7 @@ class TaskPublish {
     // 这儿页面可能没准备好, 先延迟一下
     setTimeout(() => {
       publish();
-    }, 2000);
+    }, 4000);
 
     const timer = setInterval(publish, ctx.config.rules[taskType].interval);
     this.timers.push(timer);
@@ -183,14 +183,14 @@ class TaskPublish {
 
       if (!arrivalItem) return;
 
-      const bagNos = arrivalItem.taskdail.map((t) => t.bagNo);
+      const bagNos = arrivalItem.taskdetail.map((t) => t.bagNo);
       // 找到所有包裹
       const goods = ctx.data.objectMap.$goods?.filter?.((t) => {
         return bagNos.includes(t.bagNo);
       });
 
       const isAllGoodsUnload =
-        goods?.length === arrivalItem.taskdail.length &&
+        goods?.length === arrivalItem.taskdetail.length &&
         goods?.every?.((g) => {
           return g.progressDetail === "卸货指引完成";
         });
@@ -260,7 +260,8 @@ class TaskPublish {
       // 查找组板指引完成的包裹(待上架区包裹)
       const bag = ctx.data.objectMap.$goods?.find?.((t) => {
         return (
-          t.progressDetail === "组板指引完成" && !this.objectTaskMap[t.name]
+          !this.objectTaskMap[t.name] &&
+          ctx.data.objectMap.$cardBoards.find((c) => c.goodsName === t.name)
         );
       });
 
@@ -341,7 +342,6 @@ class TaskPublish {
         return;
       }
 
-      
       // 增加库存流水
       ctx.data.addRecord("storeflowList", {
         goodsNo: goods.goodsNo,
@@ -358,7 +358,7 @@ class TaskPublish {
       console.log(`下架了`);
       this._publishTask(
         {
-          sourceStorageLocation: sourceSpace.name, // 起始储位
+          outboundLocation: sourceSpace.name, // 起始储位
           $relativeObjects: {
             $shelfSpaces: [sourceSpace.name],
             $goods: [goods.name],
@@ -422,13 +422,13 @@ class TaskPublish {
   //   this.timers.push(timer);
   // }
 
-  _publishTask(taskdail, taskType, ctx) {
+  _publishTask(taskdetail, taskType, ctx) {
     // 发布任务
-    if (!Array.isArray(taskdail)) {
-      taskdail = [taskdail];
+    if (!Array.isArray(taskdetail)) {
+      taskdetail = [taskdetail];
     }
 
-    taskdail.forEach((item) => {
+    taskdetail.forEach((item) => {
       const taskID = ctx.helper.getId(taskType);
       if (!taskID) {
         console.log("任务编号生成失败", taskType);
@@ -439,7 +439,7 @@ class TaskPublish {
       const task = {
         tasktype: taskType,
         taskID, //JD传入的任务编号
-        taskdail: item,
+        taskdetail: item,
         createTime: ctx.helper.getNowTime(),
         // 卸货单关联的到货任务
         relativeData: null,
