@@ -145,7 +145,7 @@ class DataPanel {
             }),
           },
           {
-            title: "下架指引",
+            title: "出库指引",
             list: reverse(ctx.data.offList).map((t) => {
               return {
                 下架单号: t.taskID,

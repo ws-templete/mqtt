@@ -110,6 +110,7 @@ module.exports = (aedes) => {
     const url = client.req?.url;
     console.log('url', url)
     if (!url?.includes("?mode=1")) return; // 只要仿真模式下才推送数据
+    
     const mockServer = new MockServer(client);
     client.mockServer = mockServer;
     mockServer.start(client);
@@ -123,7 +124,7 @@ module.exports = (aedes) => {
 
   // 客户端断开
   aedes.on("clientDisconnect", function (client) {
-    console.log("客户端断开了.......", client.id);
+    console.log("客户端断开了.......", client.id, client.mockServer);
     if (client.mockServer) {
       client.mockServer.stop();
       client.mockServer = null;

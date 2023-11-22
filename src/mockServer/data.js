@@ -8,7 +8,7 @@ const taskDataKeyMap = {
   卸货指引: "unloadList",
   上架指引: "onList",
   组板指引: "unitList",
-  下架指引: "offList",
+  出库指引: "offList",
   // 出库指引: "outList",
 };
 

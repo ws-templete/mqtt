@@ -56,7 +56,7 @@ class TaskPublish {
     const publish = () => {
       const goodssku = ctx.helper.getId("goodsNo");
       const list = mockjs.mock({
-        "data|5": [
+        "data|2": [
           {
             BAGNO: () => ctx.helper.getId("bagNo"), //包裹编号
             BAGSCALE: 1, //包裹规格，包裹内包含的商品数量
@@ -321,7 +321,7 @@ class TaskPublish {
 
   // 推送下架任务
   _startPublishOffTask(ctx) {
-    const taskType = "下架指引";
+    const taskType = "出库指引";
     const publish = async () => {
       // 查找货架的货位
       const sourceSpace = ctx.data.objectMap.$shelfSpaces?.find?.((t) => {
@@ -333,7 +333,7 @@ class TaskPublish {
 
       if (!sourceSpace?.name || !goods?.name) {
         console.log(
-          `发布下架指引失败`,
+          `发布出库指引失败`,
           sourceSpace,
           goods,
           this.objectTaskMap,
@@ -384,7 +384,7 @@ class TaskPublish {
   //     // 查找下架完成的货物
   //     const goods = ctx.data.objectMap.$goods?.find?.((t) => {
   //       return (
-  //         t.progressDetail === "下架指引完成" && !this.objectTaskMap[t.name]
+  //         t.progressDetail === "出库指引完成" && !this.objectTaskMap[t.name]
   //       );
   //     });
 
