@@ -1,44 +1,9 @@
 const m1 = [
   {
-    module: "1",
-    deviceId: "01_01", // 开关
-    commandId: "1",
+    deviceId: 'DS_Robot_Cleaner_YCZX_2',
+    real_data: ['116.35240691823542', '40.05051086662928'],
+    company: '智行者',
   },
-  {
-    module: "1",
-    deviceId: "01_10", // 卡扣抬起
-    commandId: "1",
-  },
-  {
-    module: "1",
-    deviceId: "01_05_03", // 机器人开始拿盒子
-    commandId: "1",
-  },
-  {
-    module: "1",
-    deviceId: "01_14",
-    commandId: "1",
-  },
-  {
-    module: "1",
-    deviceId: "01_11_02",
-    commandId: "1",
-  },
-  {
-    module: "1",
-    deviceId: "01_05_02",
-    commandId: "1",
-  },
-  {
-    module: "1",
-    deviceId: "01_10",
-    commandId: "0",
-  },
-  {
-    module: "1",
-    deviceId: "01_05_08",
-    commandId: "1",
-  },
-];
+]
 
-module.exports = m1;
+module.exports = m1

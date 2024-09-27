@@ -1,12 +1,27 @@
 const mqtt = require('mqtt')
-const m1 = require('./mock/1')
-const m2 = require('./mock/2')
-const m3 = require('./mock/3')
-const m4 = require('./mock/4')
+
+const DS_Robot_Inspector_ZXZ_20 = require('./mock/dsds/DS_Robot_Inspector_ZXZ_20')
+const DS_Robot_Cleaner_ZXZ_50 = require('./mock/dsds/DS_Robot_Cleaner_ZXZ_50')
+const DS_Robot_Cleaner_ZXZ_100 = require('./mock/dsds/DS_Robot_Cleaner_ZXZ_100')
+
+const monior = require('./mock/monior')
+
+const objs = {
+  DS_Robot_Inspector_ZXZ_20: DS_Robot_Inspector_ZXZ_20,
+  DS_Robot_Cleaner_ZXZ_50: DS_Robot_Cleaner_ZXZ_50,
+  DS_Robot_Cleaner_ZXZ_100: DS_Robot_Cleaner_ZXZ_100,
+}
+
+// 当前测试的id
+const currentId = [
+  'DS_Robot_Inspector_ZXZ_20',
+  'DS_Robot_Cleaner_ZXZ_50',
+  'DS_Robot_Cleaner_ZXZ_100',
+]
 
 const client = mqtt.connect('mqtt://127.0.0.1:8002', {
   username: 'user',
-  password: '123456'
+  password: '123456',
 })
 client.on('connect', function () {
   console.log('服务器连接成功')
@@ -15,10 +30,35 @@ client.on('connect', function () {
 })
 
 function test(client) {
+  let i = 0
+  let indexObject = {}
+
+  currentId.forEach((key) => {
+    indexObject[key] = 0
+  })
+
   setInterval(() => {
-    ;[...m1, ...m2, ...m3, ...m4].forEach((m) => {
-      client.publish('active', JSON.stringify(m), () => {})
-      // client.publish('active', JSON.stringify(m), () => {})
+    let list = []
+    Object.entries(indexObject).forEach(([key, value]) => {
+      const valueList = objs[key]
+
+      if (indexObject[key] > valueList.length - 1) {
+        indexObject[key] = 0
+      }
+
+      list.push(valueList[indexObject[key]])
+      indexObject[key]++
     })
-  }, 1000)
+
+    client.publish('active', JSON.stringify(list), () => [])
+    // const mapResult = monior.map((item) => {
+    //   return {
+    //     ...item,
+    //     time: Date.now(),
+    //     val: (Math.random() * 100).toFixed(4),
+    //     // value: (Math.random() * 100).toFixed(4),
+    //   }
+    // })
+    // client.publish('active', JSON.stringify(mapResult), () => [])
+  }, 5000)
 }

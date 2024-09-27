@@ -1,48 +1,8 @@
 const m3 = [
   {
-    module: "3",
-    deviceId: "03_02_01", // 卡扣1抬起
-    commandId: "1",
+    deviceId: 'DS_Robot_Cleaner_YCZX_2',
+    real_data: ['116.35234928350238', '40.05035895968159'],
+    company: '智行者',
   },
-  {
-    module: "3",
-    deviceId: "03_09_01", // 卡扣2抬起
-    commandId: "1",
-  },
-  {
-    module: "3",
-    deviceId: "03_09_01", // 卡扣2抬起
-    commandId: "1",
-  },
-  {
-    module: "3",
-    deviceId: "03_04_03", // 机械手开始抓盒子称重
-    commandId: "1",
-  },
-  {
-    module: "3",
-    deviceId: "03_07_04", // 机械手开始打印
-    commandId: "1",
-  },
-  {
-    module: "3",
-    deviceId: "03_02_01", // 卡扣1复位
-    commandId: "0",
-  },
-  {
-    module: "3",
-    deviceId: "03_04_02", // 机械手复位
-    commandId: "1",
-  },
-  {
-    module: "3",
-    deviceId: "03_09_01", // 卡扣2复位
-    commandId: "0",
-  },
-  {
-    module: "3",
-    deviceId: "03_07_02", // 机械手复位
-    commandId: "1",
-  },
-];
-module.exports = m3;
+]
+module.exports = m3
